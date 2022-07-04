@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:technource_practical_round/views/profilepage.dart';
 import 'package:technource_practical_round/views/signin.dart';
 
 class SignUp extends StatefulWidget {
@@ -10,14 +11,36 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController mnoController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  bool _isObscure = true;
+
+  final _formKey = GlobalKey<FormState>();
+
+  String _name = '';
+  String _mno = '';
+  String _email = '';
+  String _password = '';
+
+  void _Submit() {
+    final bool? isValid = _formKey.currentState?.validate();
+    if (isValid == true) {
+      debugPrint('Everything looks good!');
+      debugPrint(_name);
+      debugPrint(_mno);
+      debugPrint(_email);
+      debugPrint(_password);
+      Navigator.of(context).push(new MaterialPageRoute(
+          builder: (BuildContext context) => new ProfilePage()));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
-    TextEditingController nameController = TextEditingController();
-    TextEditingController mnoController = TextEditingController();
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -34,7 +57,7 @@ class _SignUpState extends State<SignUp> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 150,
+                    height: h * 0.15,
                   ),
                   const Text(
                     "Create New Account",
@@ -50,121 +73,178 @@ class _SignUpState extends State<SignUp> {
                   const SizedBox(
                     height: 50,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: TextField(
-                      controller: emailController,
-                      decoration: InputDecoration(
-                          hintText: "Full Name",
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 1.0)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 1.0)),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20))),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: TextField(
-                      controller: emailController,
-                      decoration: InputDecoration(
-                          hintText: "E-mail Address",
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 1.0)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 1.0)),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20))),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: TextField(
-                      controller: emailController,
-                      decoration: InputDecoration(
-                          hintText: "Mobile Number",
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 1.0)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 1.0)),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20))),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: TextField(
-                      controller: passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                          hintText: "Password",
-                          suffixIcon: Icon(
-                            Icons.remove_red_eye_outlined,
-                            color: Colors.white,
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(15),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 1.0)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 1.0)),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20))),
+                          child: TextFormField(
+                            controller: nameController,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Please enter your Name';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) => _name = value,
+                            decoration: InputDecoration(
+                                hintText: "Full Name",
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 1.0)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 1.0)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20))),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: TextFormField(
+                            controller: emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Please enter your email address';
+                              }
+                              if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                                return 'Please enter a valid email address';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) => _email = value,
+                            decoration: InputDecoration(
+                                hintText: "E-mail Address",
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 1.0)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 1.0)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20))),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: TextFormField(
+                            controller: mnoController,
+                            keyboardType: TextInputType.number,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Please enter your Mobile Number';
+                              }
+                              if (value.trim().length < 10) {
+                                return 'Mobile number must be at least 10 digit in length';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) => _name = value,
+                            decoration: InputDecoration(
+                                hintText: "Mobile Number",
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 1.0)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 1.0)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20))),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: TextFormField(
+                            controller: passwordController,
+                            obscureText: _isObscure,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Password field is required';
+                              }
+                              if (value.trim().length < 6) {
+                                return 'Password must be at least 6 characters in length';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) => _password = value,
+                            decoration: InputDecoration(
+                                hintText: "Password",
+                                suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _isObscure
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _isObscure = !_isObscure;
+                                      });
+                                    }),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 1.0)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 1.0)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20))),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
             SizedBox(height: 50),
-            Container(
-              width: w * 0.9,
-              height: h * 0.08,
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Center(
-                child: Text(
-                  "Sign up",
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.white,
+            GestureDetector(
+              onTap: () => _Submit(),
+              child: Container(
+                width: w * 0.9,
+                height: h * 0.08,
+                decoration: BoxDecoration(
+                  color: Colors.blueAccent,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Center(
+                  child: Text(
+                    "Sign up",
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -188,7 +268,7 @@ class _SignUpState extends State<SignUp> {
                           new MaterialPageRoute(
                               builder: (BuildContext context) => new SignIn())),
                   )
-                ]))
+                ])),
           ],
         ),
       ),

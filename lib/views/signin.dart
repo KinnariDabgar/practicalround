@@ -18,12 +18,22 @@ class _SignInState extends State<SignIn> {
 
   bool _emailvalidate = false;
   bool _passwordvalidate = false;
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    emailController.dispose();
-    passwordController.dispose();
+  bool _isObscure = true;
+
+  final _formKey = GlobalKey<FormState>();
+
+  String _userEmail = '';
+  String _password = '';
+
+  void _Submit() {
+    final bool? isValid = _formKey.currentState?.validate();
+    if (isValid == true) {
+      debugPrint('Everything looks good!');
+      debugPrint(_userEmail);
+      debugPrint(_password);
+      Navigator.of(context).push(new MaterialPageRoute(
+          builder: (BuildContext context) => new ProfilePage()));
+    }
   }
 
   addStringToSF() async {
@@ -54,7 +64,7 @@ class _SignInState extends State<SignIn> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 150,
+                    height: h * 0.15,
                   ),
                   const Text(
                     "Welcome Back!",
@@ -70,150 +80,180 @@ class _SignInState extends State<SignIn> {
                   const SizedBox(
                     height: 50,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: TextField(
-                      controller: emailController,
-                      decoration: InputDecoration(
-                          hintText: "E-mail Address",
-                          errorText:
-                              _emailvalidate ? 'email Can\'t Be Empty' : null,
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 1.0)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 1.0)),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20))),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: TextFormField(
+                            controller: emailController,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Please enter your email address';
+                              }
+                              if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                                return 'Please enter a valid email address';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) => _userEmail = value,
+                            decoration: InputDecoration(
+                                hintText: "E-mail Address",
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 1.0)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 1.0)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20))),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: TextFormField(
+                            controller: passwordController,
+                            obscureText: _isObscure,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Password field is required';
+                              }
+                              if (value.trim().length < 6) {
+                                return 'Password must be at least 6 characters in length';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) => _password = value,
+                            decoration: InputDecoration(
+                                hintText: "Password",
+                                suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _isObscure
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _isObscure = !_isObscure;
+                                      });
+                                    }),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 1.0)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 1.0)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20))),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(child: Container()),
+                            Text(
+                              "Forgot your Password?",
+                              style: TextStyle(
+                                  fontSize: 20, color: Colors.grey[500]),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: TextField(
-                      controller: passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                          hintText: "Password",
-                          errorText: _passwordvalidate
-                              ? 'Password Can\'t Be Empty'
-                              : null,
-                          suffixIcon: Icon(
-                            Icons.remove_red_eye_outlined,
+                  SizedBox(height: 60),
+                  GestureDetector(
+                    onTap: () => _Submit(),
+                    child: Container(
+                      width: w * 0.9,
+                      height: h * 0.08,
+                      decoration: BoxDecoration(
+                        color: Colors.blueAccent,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "Sign in",
+                          style: TextStyle(
+                            fontSize: 24,
                             color: Colors.white,
                           ),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 1.0)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 1.0)),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20))),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Container(
+                    width: w * 0.9,
+                    height: h * 0.08,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            'assets/images/g.png',
+                            height: 30,
+                            width: 30,
+                            fit: BoxFit.cover,
+                          ),
+                          SizedBox(width: 20),
+                          Text(
+                            "Sign in with google",
+                            style: TextStyle(
+                              fontSize: 24,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: w * 0.1,
                   ),
-                  Row(
-                    children: [
-                      Expanded(child: Container()),
-                      Text(
-                        "Forgot your Password?",
-                        style: TextStyle(fontSize: 20, color: Colors.grey[500]),
-                      ),
-                    ],
-                  ),
+                  RichText(
+                      text: TextSpan(
+                          text: "Don't have an account?",
+                          style:
+                              TextStyle(color: Colors.grey[500], fontSize: 20),
+                          children: [
+                        TextSpan(
+                          text: " Sign Up",
+                          style: TextStyle(
+                              color: Colors.blueAccent,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => Navigator.of(context).push(
+                                new MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        new SignUp())),
+                        )
+                      ])),
                 ],
               ),
             ),
-            SizedBox(height: 60),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  emailController.text.isEmpty
-                      ? _emailvalidate = true
-                      : _emailvalidate = false;
-                  passwordController.text.isEmpty
-                      ? _passwordvalidate = true
-                      : _passwordvalidate = false;
-                });
-                if (emailController.text.isNotEmpty &&
-                    passwordController.text.isNotEmpty) {
-                  addStringToSF();
-                  Navigator.of(context).push(new MaterialPageRoute(
-                      builder: (BuildContext context) => new ProfilePage()));
-                }
-              },
-              child: Container(
-                width: w * 0.9,
-                height: h * 0.08,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Center(
-                  child: Text(
-                    "Sign in",
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Container(
-              width: w * 0.9,
-              height: h * 0.08,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Center(
-                child: Text(
-                  "Sign in with google",
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: w * 0.1,
-            ),
-            RichText(
-                text: TextSpan(
-                    text: "Don't have an account?",
-                    style: TextStyle(color: Colors.grey[500], fontSize: 20),
-                    children: [
-                  TextSpan(
-                    text: " Sign Up",
-                    style: TextStyle(
-                        color: Colors.blueAccent,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () => Navigator.of(context).push(
-                          new MaterialPageRoute(
-                              builder: (BuildContext context) => new SignUp())),
-                  )
-                ]))
           ],
         ),
       ),

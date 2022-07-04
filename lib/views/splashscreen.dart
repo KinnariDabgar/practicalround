@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
               image: DecorationImage(
-                  image: AssetImage("assets/images/back.jpg"),
+                  image: AssetImage("assets/images/back1.jpg"),
                   colorFilter: ColorFilter.mode(
                       Colors.black.withOpacity(0.6), BlendMode.dstATop),
                   fit: BoxFit.cover)),
@@ -31,13 +31,34 @@ class _SplashScreenState extends State<SplashScreen> {
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
-                    Text("abda",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontFamily: 'hind',
-                            color: Colors.white,
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold)),
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("abda",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontFamily: 'hind',
+                                  color: Colors.white,
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold)),
+                          Column(
+                            children: [
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                    color: Colors.blueAccent,
+                                    borderRadius: BorderRadius.circular(50)),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
                     SizedBox(
                       height: 15,
                     ),
@@ -77,7 +98,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     width: MediaQuery.of(context).size.width * 0.9,
                     height: MediaQuery.of(context).size.height * 0.08,
                     decoration: BoxDecoration(
-                      color: Colors.blue,
+                      color: Colors.blueAccent,
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: const Center(

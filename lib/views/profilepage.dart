@@ -12,7 +12,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _MyAppProfilePageState extends State<ProfilePage> {
-  late Future<Profile> profile;
+  Future<Profile>? profile;
 
   @override
   void initState() {
